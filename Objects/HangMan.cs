@@ -8,11 +8,20 @@ namespace HangMan.Objects
     private bool _inGame = false;
     private static List<Game> _gamesPlayed = new List<Game> {};
     private bool _isFirstVisit = true;
+    private List<string> _wordBank = new List<string>(new string[] { "element", "tidal", "scotch" });
+    private List<string> _word;
+    private string _encodedWord;
 
     public Game (bool inGame, string letterGuess)
     {
       _turn ++;
       _inGame = inGame;
+    }
+
+    public void startingGame(int index)
+    {
+      string convert = _wordBank[index];
+      _word = convert.ToCharArray();
     }
 
     public bool HasWon()
@@ -40,9 +49,14 @@ namespace HangMan.Objects
       return "<img src='broken'>";
     }
 
-    public string GetInterfaceLetterList()
+    public string GetInterfaceLetterList(List<string> wordToEncode)
     {
-      return "Wh?_";
+      wordToEncode[_currentTurn] = "?" ;
+      for (i=_currentTurn+1; i < wordToEncode.Count; i++)
+      {
+        wordToEncode[i] = "_";
+      }
+
     }
   }
 }

@@ -9,7 +9,7 @@ namespace HangMan
     public HomeModule()
     {
       Get["/"] = _ => {
-        Game gameState = New Game(false);
+        Game gameState = new Game(false);
         return View["index.cshtml", gameState];
       };
       Get["/start"] = _ => {
