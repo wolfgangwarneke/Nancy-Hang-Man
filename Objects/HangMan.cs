@@ -4,59 +4,99 @@ namespace HangMan.Objects
 {
   public class Game
   {
-    private int _turn = 0;
-    private bool _inGame = false;
-    private static List<Game> _gamesPlayed = new List<Game> {};
-    private bool _isFirstVisit = true;
-    private List<string> _wordBank = new List<string>(new string[] { "element", "tidal", "scotch" });
-    private List<string> _word;
-    private string _encodedWord;
+    private string _testWord = "superfly";
+    private string _gameWord;
+    private static Game _currentGame;
+    private List<string> _lettersGuessed = new List<string> {};
+    private string _letterGuessedThisTurn;
+    private int _wrongGuesses = 0;
+    private string _imageHtml = "<img src='/Content/img/alive.png' alt=''>";
+    private List<string> _imageList = new List<string> {
+      "<img src='/Content/img/alive.png' alt=''>",
+      "<img src='/Content/img/alive.png' alt=''>",
+      "<img src='/Content/img/alive.png' alt=''>",
+      "<img src='/Content/img/alive.png' alt=''>",
+      "<img src='/Content/img/alive.png' alt=''>",
+      "<img src='/Content/img/alive.png' alt=''>",
+      "<img src='/Content/img/alive.png' alt=''>"
+      };
+    private List<string> _correctGuesses = new List<string> {};
+    private List<string> _outputWord = new List<string> {};
 
-    public Game (bool inGame, string letterGuess)
+    public Game()
     {
-      _turn ++;
-      _inGame = inGame;
+      this.SetGameWord();
+      _currentGame = this;
     }
 
-    public void startingGame(int index)
+    public void PassTurn(string letterGuessed)
     {
-      string convert = _wordBank[index];
-      _word = convert.ToCharArray();
-    }
-
-    public bool HasWon()
-    {
-      return false;
-    }
-
-    public bool Loser()
-    {
-      return false;
-    }
-
-    public bool IsFirstVisit()
-    {
-      bool status;
-      if (_isFirstVisit) {
-        status = true;
-        _isFirstVisit = false;
+      _lettersGuessed.Add(letterGuessed);
+      if (_gameWord.Contains(letterGuessed)) {
+        _correctGuesses.Add(letterGuessed);
+      } else {
+        _currentGame.SetImageHtml();
+        _wrongGuesses++;
       }
-      return status;
     }
 
-    public string CurrentHangmanImage()
+    public string GetGameWord()
     {
-      return "<img src='broken'>";
+      return _gameWord;
     }
 
-    public string GetInterfaceLetterList(List<string> wordToEncode)
+    public void SetGameWord()
     {
-      wordToEncode[_currentTurn] = "?" ;
-      for (i=_currentTurn+1; i < wordToEncode.Count; i++)
-      {
-        wordToEncode[i] = "_";
+      _gameWord = _testWord;
+    }
+
+    public static Game GetCurrentGame()
+    {
+      return _currentGame;
+    }
+
+    public List<string> GetLettersGuessed()
+    {
+      return _lettersGuessed;
+    }
+
+    // public void SetLetterGuessedThisTurn(string letter)
+    // {
+    //   _letterGuessedThisTurn = letter;
+    // }
+    public int GetWrongGuesses()
+    {
+      return _wrongGuesses;
+    }
+    public List<string> GetCorrectGuesses()
+    {
+      return _correctGuesses;
+    }
+
+
+    public void SetImageHtml()
+    {
+      _imageHtml = _imageList[_wrongGuesses];
+    }
+
+    public string GetImageHtml()
+    {
+      return _imageHtml;
+    }
+
+    public List<string> GetWordOutput()
+    {
+      _outputWord.Clear();
+      for (var i = 0; i < _gameWord.Length; i++) {
+        _outputWord.Add("_");
       }
-
+      foreach( var letter in _correctGuesses ) {
+        int index = _gameWord.IndexOf(letter);
+        if (index != -1) {
+          _outputWord[index] = letter;
+        }
+      }
+      return _outputWord;
     }
   }
 }

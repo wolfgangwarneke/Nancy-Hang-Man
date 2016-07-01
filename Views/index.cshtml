@@ -1,33 +1,34 @@
 
 <h1>Hang Man</h1>
 
-@if (Model.HasWon()) {
-  <h2>Congratulations</h2>
-  <h3>You have won. Feel proud</h3>
-  <a href="/start">Play again?</a>
-} else if (Model.Loser()) {
-  <h2>Sorry.</h2>
-  <h3>You were not able to guess the word.</h3>
-  <h4>(This resulted in a loss)</h4>
-} else if (Model.IsFirstVisit()) {
-  <h2>Welcome.</h2>
-  <h3><em>Hang Man</em> is a classic game of the strategy and passion alike.<h3>
-  <a href="/start">Start a game?</a>
-} else {
-  @Html.Raw(Model.CurrentHangmanImage())
-  @*yay*@
-  <div id="wordDisplay">
-    <form action="/response" method="post">
-    foreach (string letter in Model.GetInterfaceLetterList()) {
-        @if (letter == "?") {
-          <input type="text" id="answer" name="answer">
-        } else if (letter == "_") {
-          <span class="unanswered">_</span>
-        } else {
-          <span class="letter">letter</span>
-        }
-    }
-            <button type="submit">Final answer</button>
-          <form>
-  </div>
+<h2>@Model.GetGameWord()</h2>
+
+<h3>Wrong Guesses</h3>
+<p>@Model.GetWrongGuesses()</p>
+
+@Html.Raw(Model.GetImageHtml())
+
+<p>
+@foreach (var letter in Model.GetWordOutput()) {
+  <span class="outputLetter">@letter</span>
 }
+</p>
+
+<h3>Correct Guesses</h3>
+<ul>
+  @foreach (var guess in Model.GetCorrectGuesses()) {
+    <li>@guess</li>
+  }
+</ul>
+
+<h3>Letters you have guessed</h3>
+<ul>
+  @foreach (var letter in Model.GetLettersGuessed()) {
+    <li>@letter</li>
+  }
+</ul>
+
+<form action="/response" method="post">
+  <input type="text" name="letter" id="letter">
+  <button type="submit">GUESS A LETTER</button>
+</form>

@@ -9,16 +9,16 @@ namespace HangMan
     public HomeModule()
     {
       Get["/"] = _ => {
-        Game gameState = new Game(false);
-        return View["index.cshtml", gameState];
+        return View["home.html"];
       };
       Get["/start"] = _ => {
-        Game gameState = new Game(true);
-        return View["index.cshtml", gameState];
+        Game newGame = new Game();
+        return View["index.cshtml", newGame];
       };
       Post["/response"] = _ => {
-        Game gameState = new Game(true, Request.Form["answer"]);
-        return View["index.cshtml", gameState];
+        Game currentGame = Game.GetCurrentGame();
+        currentGame.PassTurn(Request.Form["letter"]);
+        return View["index.cshtml", currentGame];
       };
     }
   }
